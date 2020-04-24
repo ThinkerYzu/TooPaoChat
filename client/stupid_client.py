@@ -1,5 +1,7 @@
 from httplib import HTTPConnection
 
+import gstclient
+
 # Login to the server and return the port number assigned by the
 # server.
 def get_login(host, port, name, pwd):
@@ -21,6 +23,9 @@ if __name__ == '__main__':
     port = get_login(host, port, name, pwd)
     if port:
         print 'Port number is %d' % port
+        gstclient.init()
+        client = gstclient.build_client(host, port)
+        gstclient.run()
     else:
         print 'Error'
         pass
