@@ -1,0 +1,1 @@
+gst-launch-1.0 v4l2src norm=45056  ! videoscale ! 'video/x-raw,height=200,width=300' ! queue name=v1 ximagesrc ! videoscale ! 'video/x-raw,height=200,width=300' ! queue name=v2 videomixer name=mix sink_0::xpos=0 sink_0::ypos=0 sink_1::xpos=300 sink_1::ypos=0 ! vp8enc ! rtpvp8pay ! udpsink host=127.0.0.1 port=5001 v1. ! videorate ! mix.sink_0 v2. ! videorate ! mix.sink_1
