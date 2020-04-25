@@ -24,6 +24,7 @@ class GstClient(object):
 
         source = ef.make('v4l2src')
         source.set_property('norm', 45056)
+        #source = ef.make('videotestsrc')
         vscale = ef.make('videoscale')
         caps = Gst.Caps.from_string('video/x-raw, width=300, height=200')
         capsfilter = ef.make('capsfilter')
@@ -69,6 +70,7 @@ class GstClient(object):
         vp8dec.link(sink)
 
         bus = pipe.get_bus()
+        bus.add_signal_watch()
         bus.connect('message', self.on_message)
 
         pipe.set_state(Gst.State.PLAYING)
@@ -78,7 +80,6 @@ class GstClient(object):
         if msg.type == 1:
             Gtk.main_quit()
             pass
-        print msg
         pass
     pass
 

@@ -1,0 +1,4 @@
+
+Explain How to Change Pipeline Dynamically
+ - https://coaxion.net/blog/2014/01/gstreamer-dynamic-pipelines/
+ - https://github.com/GStreamer/gst-python/blob/master/examples/dynamic_src.py

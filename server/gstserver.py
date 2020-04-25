@@ -30,36 +30,45 @@ class GstRemoteClient(object):
         caps = Gst.Caps.from_string('application/x-rtp, payload=96')
         source.set_property('caps', caps)
         rtpvp8depay = ef.make('rtpvp8depay')
-        vp8dec = ef.make('vp8dec')
+        self.vp8dec = vp8dec = ef.make('vp8dec')
 
-        comps = [source, rtpvp8depay, vp8dec]
+        self.comps = comps = [source, rtpvp8depay, vp8dec]
         for comp in comps:
             pipe.add(comp)
             pass
         for src, dst in zip(comps[:-1], comps[1:]):
             src.link(dst)
             pass
-
-        # Request and set a new pad only when needed, or it may be
-        # blocked.
-        self.server.request_mixer_pad()
-
-        vp8dec.link(self.vmixer)
         pass
 
     def _build_output(self):
         print 'build output\n'
         pipe = self.pipe
-        tee = self.output_tee
 
         ef = Gst.ElementFactory
-        self.sink = sink = ef.make('udpsink')
+        self.udpsink = sink = ef.make('udpsink')
         sink.set_property('host', self.host)
         print self.port + 1
         sink.set_property('port', self.port + 1)
 
         pipe.add(sink)
-        tee.link(sink)
+
+        self.comps.append(sink)
+        pass
+
+    def do_link(self):
+        # Request and set a new pad only when needed, or it may be
+        # blocked.
+        self.server.request_mixer_pad()
+
+        self.vp8dec.link(self.vmixer)
+
+        tee = self.output_tee
+        tee.link(self.udpsink)
+
+        for c in self.comps:
+            c.sync_state_with_parent()
+            pass
         pass
     pass
 
@@ -105,8 +114,18 @@ class GstServer(object):
 
         pipe = self.pipe
         if len(self.clients) == 1:
+            client.do_link()
             print 'PLAYING\n'
             pipe.set_state(Gst.State.PLAYING)
+        else:
+            waitings = set(self.clients.values())
+            waitings.remove(client)
+            for c in self.clients.values():
+                if c == client:
+                    continue
+                pad = c.vp8dec.get_static_pad('src')
+                probe = pad.add_probe(Gst.PadProbeType.IDLE, self.on_probe_cb, (client, c, waitings))
+                pass
             pass
 
         return client
@@ -114,6 +133,18 @@ class GstServer(object):
     def on_message(self, elm, msg):
         #print msg, msg.type
         pass
+
+    def on_probe_cb(self, pad, info, data):
+        newclient, client, waitings = data
+        if not waitings:
+            return Gst.PadProbeReturn.REMOVE
+
+        waitings.remove(client)
+        if waitings:
+            return Gst.PadProbeReturn.DROP
+
+        newclient.do_link()
+        return Gst.PadProbeReturn.REMOVE
     pass
 
 server = None
