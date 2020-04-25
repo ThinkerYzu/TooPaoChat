@@ -1,7 +1,7 @@
 # Why??
 
 我為什麼會做這個專案呢? 其實只是為了證明下面文章中所討論的作業是可能的，
-即使是對大一學生。
+即使是大一學生。
 
  - https://bangqu.com/Ea8W71.html
 
@@ -59,7 +59,7 @@ pipeline，並提供範例。這樣的分享課程不會花太多時間，我猜
 
 # 確實發現一些困難
 
-Threading! 對大一學生應該不瞭解 multi-threading 和 async tasks。在以
+Threading! 大一學生應該不瞭解 multi-threading 和 async tasks。在以
 gstreamer 為例，助教需要提供實際能執行的範例，讓學生知道如何把他們的
 I/O 和 glib 的 event loop 整合在一起。
 
