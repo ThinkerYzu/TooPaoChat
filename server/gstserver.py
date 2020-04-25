@@ -118,13 +118,16 @@ class GstServer(object):
             print 'PLAYING\n'
             pipe.set_state(Gst.State.PLAYING)
         else:
+            # Wait all existing udpsrc idle, and safely change the
+            # links in the pipeline during the probe callbacks.
             waitings = set(self.clients.values())
             waitings.remove(client)
             for c in self.clients.values():
                 if c == client:
                     continue
+
                 pad = c.vp8dec.get_static_pad('src')
-                probe = pad.add_probe(Gst.PadProbeType.IDLE, self.on_probe_cb, (client, c, waitings))
+                pad.add_probe(Gst.PadProbeType.IDLE, self.on_probe_cb, (client, c, waitings))
                 pass
             pass
 
