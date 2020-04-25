@@ -36,32 +36,32 @@ GstClient._build_upload() 這個 function 裡，找到 videotestsrc 這一行。
 
 # 這個作業適合大一生嗎?
 
-這個作業最大的爭議是其難道太高，大一生可能無法實作。要實作一個 video
+這個作業最大的爭議是其難度太高，大一生可能無法實作。要實作一個 video
 chatroom，至少需要知道如何從 webcam 抓取影像，截取桌面的影像，並將影像
-傳到 server 和傳回來。大家都覺的這很難，也確實很難。但作業本身容許使用
-第三方專案，但必需有 source code。而事實上，我們已有很強的 open source
+傳到 server 和傳回來。多數人覺得很難，也確實很難。但作業本身容許使用第
+三方專案，但必需有 source code。而事實上，我們已有很強的 open source
 library，可以代勞這些困難的地方。學生不用從頭做起。
 
-根據作業的需求，所有第三方程式碼必需以原始碼的形式使用，不能直接使用編
-譯好的二進位 shared library 或 DLL。這意謂，學生必需從原始程式編譯成
-libary，然後和主程式 link。這對 gstreamer這樣的 library 並不果難，特別
-是在 Linux環境。但在 Windows，其難度可能較高。但，網路上有許多這類的文
+根據作業需求，所有第三方程式碼必需以原始碼的形式使用，不能直接使用編譯
+好的二進位 shared library 或 DLL。這意謂，學生必需從原始程式編譯成
+libary，然後和主程式 link。以 gstreamer 這樣的 library 而言，並不困難，
+特別是在 Linux 環境。但在 Windows，其難度可能較高。但，網路上有許多文
 件，應該不成問題。而且，Windows 上應該也有原生的類似專案可以使用。
 
 # 大一生怎麼會知道這些資訊?
 
-對於剛學習軟體相關知識的學生，確實難以知道這些元件。這也就是助教(TA)的
-用處了。助教們應該協助學生，分享相關的資訊。甚至學生解釋這些 library的
-一些基本概念。
+對於剛學習軟體相關知識的學生，確實難以得知這些元件。這也就是助教(TA)的
+用處了。助教們應該協助學生，分享相關的資訊。甚至向學生解釋這些 library
+的一些基本概念。
 
-以 gstreamer為例，助教應該解釋 pipeline 的功用，示範如何使用和建立
-pipeline，並提供範例。這樣的分享課程不會花太多時間，我猜測在一小時之內。
+以 gstreamer 為例，助教應該解釋 pipeline 的功用，示範如何使用和建立
+pipeline，並提供範例。這樣的分享課程不會花太多時間，猜測在一小時之內。
 
 # 確實發現一些困難
 
-Threading! 大一學生應該不瞭解 multi-threading 和 async tasks。在以
-gstreamer 為例，助教需要提供實際能執行的範例，讓學生知道如何把他們的
-I/O 和 glib 的 event loop 整合在一起。
+Threading! 大一學生應該不瞭解 multi-threading 和 async tasks。以
+gstreamer 為例，助教需提供實際可執行的範例，讓學生知道如何把他們的 I/O
+(如 HTTP) 和 glib 的 event loop 整合在一起。
 
 再以 gstreamer 為例，在程式執行當中，動態修改 pipeline 需要一些技巧。
 同樣的，也需要助教提供可執行的範例。
