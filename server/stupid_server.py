@@ -1,4 +1,8 @@
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
+import gstserver
+import gi
+gi.require_version("Gst", "1.0")
+from gi.repository import GObject, Gtk
 
 pwds = {
     "user1": "user1_123",
@@ -6,7 +10,7 @@ pwds = {
 }
 ul_ports = {}
 client_ip = {}
-
+gst_clients = {}
 
 FIRST_PORT = 8050
 for i, name in enumerate(pwds.keys()):
@@ -43,6 +47,10 @@ class ReqHandler(BaseHTTPRequestHandler):
     def change_client_ip(self, name, ip):
         self.log_message('client %s @ %s', name, ip)
         client_ip[name] = ip
+        if not gst_clients.has_key(name):
+            port = ul_ports[name]
+            gst_clients[name] = gstserver.add_client(name, ip, port)
+            pass
         pass
 
     def login(self, args):
@@ -59,9 +67,24 @@ class ReqHandler(BaseHTTPRequestHandler):
     pass
 
 def run():
+    gstserver.init()
+
     address = ('', 8001)
     httpd = HTTPServer(address, ReqHandler)
-    httpd.serve_forever()
+
+    # Let glib to watch the socket for us.
+    #
+    # Call HTTPServer to serve one request when there is an incoming
+    # connection, and return to main loop of glib immediately.
+    def handle_http(*args):
+        httpd.handle_request()
+        # Add the socket to the watch list repeatly, or it will stop
+        # watching it afterward.
+        GObject.io_add_watch(httpd.socket.fileno(), GObject.IO_IN, handle_http)
+        pass
+
+    GObject.io_add_watch(httpd.socket.fileno(), GObject.IO_IN, handle_http)
+    Gtk.main()
     pass
 
 if __name__ == '__main__':
