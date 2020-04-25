@@ -8,7 +8,7 @@ video chat platform without much efforts.
 # Tests
 
 server/stupid_server.py is a server implementation that is very
-stupid, but still can be used as a prove of concept.  It supports two
+stupid, but still can be used as a proof of concept.  It supports two
 users only, user1 and user2, right now.  Their passwords are user1_123
 & user2_123, respectively.
 
