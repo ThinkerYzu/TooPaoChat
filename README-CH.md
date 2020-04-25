@@ -32,7 +32,7 @@ client/stupid_client.py 是一個很蠢的 client 端實作，把 webcam 的影�
 
 使用測試影片做測試之前，必需先修改 client/gstclient.py 這個檔案。在
 GstClient._build_upload() 這個 function 裡，找到 videotestsrc 這一行。
-然後移除註解符號，並把 v4l2src 加上主解符號。
+然後移除註解符號，並把 v4l2src 加上註解符號。
 
 # 這個作業適合大一生嗎?
 
